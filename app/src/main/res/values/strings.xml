@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Survey</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
+    <string name="reset_button">Reset All</string>
+    <string name="yes_total">%1$d</string>
+    <string name="no_total">%1$d</string>
+    <string name="question">Do you like living in cold, snowy weather?</string>
+</resources>
