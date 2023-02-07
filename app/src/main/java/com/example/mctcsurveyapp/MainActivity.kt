@@ -28,11 +28,8 @@ class MainActivity : AppCompatActivity() {
         setListeners()
 
         // recall count updates from saved instance state
-        val savedNoCount = savedInstanceState?.getInt(NO_COUNT_KEY)
-        if (savedNoCount != null) { noCount = savedNoCount }
-
-        val savedYesCount = savedInstanceState?.getInt(YES_COUNT_KEY)
-        if (savedYesCount != null) { yesCount = savedYesCount }
+        noCount = savedInstanceState?.getInt(NO_COUNT_KEY) ?: 0
+        yesCount = savedInstanceState?.getInt(YES_COUNT_KEY) ?: 0
 
         updateCounts()
 
