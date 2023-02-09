@@ -3,7 +3,19 @@
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
     <string name="reset_button">Reset All</string>
-    <string name="yes_total">%1$d</string>
-    <string name="no_total">%1$d</string>
+    <string name="yes_total">Yes: %1$d</string>
+    <string name="no_total">No: %1$d</string>
     <string name="question">Do you like living in cold, snowy weather?</string>
+    <string name="title_activity_survey_results">SurveyResultsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="result_button_text">Results</string>
+    <string name="continue_survey_button_text">Continue Survey</string>
+    <string name="reset_message">Totals have been reset</string>
 </resources>
