@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="results_button_tint">#FF9C27B0</color>
     <color name="reset_button_tint">#FFAE1825</color>
+    <color name="results_fragment_background">#BC9DFB</color>
 </resources>
