@@ -8,7 +8,8 @@ import android.widget.TextView
 
 /** This Activity is used to display the results of the survey: How many yes and no answers */
 
-/* Brainstorming:
+/* @Deprecated
+Brainstorming:
 Display the results of the survey.  Include the reset button to set the counts to zero, and a
 continue button to jump back to the original screen.
 
@@ -28,6 +29,4 @@ class SurveyResultActivity : AppCompatActivity() {
 
 
     }
-
-
 }

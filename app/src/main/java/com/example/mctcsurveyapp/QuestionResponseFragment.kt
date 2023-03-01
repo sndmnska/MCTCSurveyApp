@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 
 /**
  * A simple [Fragment] subclass.
@@ -25,19 +26,25 @@ class QuestionResponseFragment : Fragment() {
 //    private lateinit var noCountTextView: TextView
     private lateinit var resultButton: Button
 
-    private val resultScreenLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            handleResetResult(result)
-        }
+//    private val resultScreenLauncher =
+//        /* TODO: This might not mean much in this case.  This applies to Activities, in which we are attempting
+//            to put two fragments in to a single activity.
+//         */
+//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//            handleResetResult(result)
+//        }
 
     // Initialize the count totals to start a zero.
-    private var yesCount = 0
-    private var noCount = 0
+
+
+    // Let's create a ViewModel for the fragments here.  This... should go across both models...
+    val surveyViewModel: SurveyViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(SurveyViewModel::class.java)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
     }
 
     override fun onCreateView(
@@ -46,14 +53,17 @@ class QuestionResponseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_question_response, container, false)
-    }
-    initializeWidgets()
-    setListeners()
+        val view =  inflater.inflate(R.layout.fragment_question_response, container, false)
+        initializeWidgets(view)
+        setListeners()
+        return view
 
-    // recall count updates from saved instance state
-    noCount = savedInstanceState?.getInt(NO_COUNT_KEY) ?: 0
-    yesCount = savedInstanceState?.getInt(YES_COUNT_KEY) ?: 0
+    }
+
+
+//    // recall count updates from saved instance state
+//    noCount = savedInstanceState?.getInt(NO_COUNT_KEY) ?: 0
+//    yesCount = savedInstanceState?.getInt(YES_COUNT_KEY) ?: 0
 
 //        updateCounts()
 
@@ -61,30 +71,27 @@ class QuestionResponseFragment : Fragment() {
     // save instance state for noCount and yesCount variables.
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(NO_COUNT_KEY, noCount)
-        outState.putInt(YES_COUNT_KEY, yesCount)
+        outState.putInt(NO_COUNT_KEY, surveyViewModel.noCount)
+        outState.putInt(YES_COUNT_KEY, surveyViewModel.yesCount)
     }
 
-//    private fun updateCounts() {
-//        yesCountTextView.text = getString(R.string.yes_total, yesCount)
-//        noCountTextView.text = getString(R.string.no_total, noCount)
-//    }
+
 
     private fun setListeners() {
         // Note that the TextView "surveyQuestion" is not a variable here,
         // because it is not interacted with in the program.
         yesButton.setOnClickListener {
-            yesCount += 1 // increments yesCount
-//            updateCounts()
+            surveyViewModel.yesCount += 1  // increments yesCount
+            updateCounts()
         }
 
         noButton.setOnClickListener {
-            noCount += 1 // increments noCount
-//            updateCounts()
+            surveyViewModel.noCount += 1 // increments noCount
+            updateCounts()
         }
         resultButton.setOnClickListener {
             // Send noCount and yesCount to SurveyResultActivity, go to that Activity
-            val showResultsIntent = Intent(this, SurveyResultActivity::class.java)
+            val showResultsIntent = Intent(this, surveyViewModel)
             showResultsIntent.putExtra(EXTRA_YES_COUNT, yesCount)
             showResultsIntent.putExtra(EXTRA_NO_COUNT, noCount)
             resultScreenLauncher.launch(showResultsIntent)
@@ -115,9 +122,9 @@ class QuestionResponseFragment : Fragment() {
 //        }
     }
 
-    private fun initializeWidgets() {
-        yesButton = findViewById(R.id.yesButton)
-        noButton = findViewById(R.id.noButton)
+    private fun initializeWidgets(view: View) {
+        yesButton = view.findViewById(R.id.yesButton)
+        noButton = view.findViewById(R.id.noButton)
 
         // removed 2/8/23 for new results screen
         //        resetButton = findViewById(R.id.resetButton)

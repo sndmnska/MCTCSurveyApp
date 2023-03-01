@@ -1,12 +1,7 @@
 package com.example.mctcsurveyapp
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 
 // Keys to be able to save two variables in instance states.
 const val YES_COUNT_KEY = "yes-count-bundle-key"

@@ -17,13 +17,28 @@ class SurveyResultsFragment : Fragment() {
     private lateinit var resetButton: Button
     private lateinit var continueButton: Button
 
-    // This is needed to initialize the
+    /* Okay, so I need to brainstorm this...  Somehow we need to wire this stuff up such that each of
+    these fragments are talking with each other.  According to the RedBlueFragment practice app we developed in class
+    as well as the Criminal Intent app, neither of them seem to depend on MainActivity to function.
+    Indeed, the connection to MainActivity seems to be through the activity_main.xml layout file, in which
+    FragmentContainers are identified and connected to the fragments themselves.
+
+    Somehow, these fragments are able to send information back and forth.  I'm wondering if I have to
+    separate out the information to some extent?
+
+    I have noticed that some of the variables are broken from the connections between the two activities.
+    I'll double check that these are generally where they're supposed to be, then attempt to send between the two.
+
+     */
+
+    /*After Class
+    Well, we do need something in between to send the data back and forth.
+    Either a ViewModel or the Activity itself should suffice well.
+     */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO set fragment content view?
 
-        initWidgets()
         getTotalsFromIntent()
         setOnClickListeners()
 
@@ -34,7 +49,9 @@ class SurveyResultsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_survey_results, container, false)
+        val view =  inflater.inflate(R.layout.fragment_survey_results, container, false)
+        initWidgets(view) // send view to be assigned to the findViewById
+        return view
     }
 
     companion object {
@@ -46,47 +63,34 @@ class SurveyResultsFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment SurveyResultsFragment.
          */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SurveyResultsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-    private fun getTotalsFromIntent() {
-        val yesTotal = intent.getIntExtra(EXTRA_YES_COUNT, 0)
-        val noTotal = intent.getIntExtra(EXTRA_NO_COUNT, 0)
 
-        // The strings are used for some formatting
-        yesTotalTextView.text = getString(R.string.yes_total, yesTotal)
-        noTotalTextView.text = getString(R.string.no_total, noTotal)
+        // It's possible this might be useful for ViewModels
     }
+
 
     private fun setOnClickListeners() {
         resetButton.setOnClickListener {
-            resetStatus(true)
+            resetStatus()
         }
         continueButton.setOnClickListener {
             // go to the main screen, do not reset
-            resetStatus(false)
+            resetStatus()
         }
     }
+    fun updateCounts() {
+        // In the old version, this simply updated values that were live on the screen.
+        // In the new version, this is probably best in the surveyResultsFragment.
 
-    private fun initWidgets() {
-        yesTotalTextView = findViewById(R.id.yes_total_results)
-        noTotalTextView = findViewById(R.id.no_total_results)
-        resetButton = findViewById(R.id.reset_button)
-        continueButton = findViewById(R.id.continue_button)
+        yesTotalTextView.text = getString(R.string.yes_total, )
+        noTotalTextView.text = getString(R.string.no_total, noCount)
     }
 
-    private fun resetStatus(resetState: Boolean) {
-        val resultIntent = Intent()
-        resultIntent.putExtra(EXTRA_RESET_BUTTON, resetState) // false - do not reset
-        setResult(AppCompatActivity.RESULT_OK, resultIntent)
-        finish()
+
+    private fun initWidgets(view: View) {
+        yesTotalTextView = view.findViewById(R.id.yes_total_results)
+        noTotalTextView = view.findViewById(R.id.no_total_results)
+        resetButton = view.findViewById(R.id.reset_button)
+        continueButton = view.findViewById(R.id.continue_button)
     }
 
 }
