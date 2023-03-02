@@ -9,13 +9,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+
+
+const val EXTRA_YES_COUNT = "com.example.mctcsurveyapp.YES_COUNT"
+const val EXTRA_NO_COUNT = "com.example.mctcsurveyapp.NO_COUNT"
 
 
 class SurveyResultsFragment : Fragment() {
     private lateinit var yesTotalTextView: TextView
     private lateinit var noTotalTextView: TextView
     private lateinit var resetButton: Button
-    private lateinit var continueButton: Button
 
     /* Okay, so I need to brainstorm this...  Somehow we need to wire this stuff up such that each of
     these fragments are talking with each other.  According to the RedBlueFragment practice app we developed in class
@@ -36,10 +40,13 @@ class SurveyResultsFragment : Fragment() {
     Either a ViewModel or the Activity itself should suffice well.
      */
 
+    val surveyViewModel: SurveyViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(SurveyViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getTotalsFromIntent()
         setOnClickListeners()
 
     }
@@ -49,40 +56,28 @@ class SurveyResultsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_survey_results, container, false)
+        val view =  inflater.inflate(R.layout.fragment_survey_results, container, true)
         initWidgets(view) // send view to be assigned to the findViewById
         return view
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SurveyResultsFragment.
-         */
-
-        // It's possible this might be useful for ViewModels
+        fun newInstance() = SurveyResultsFragment()
     }
 
 
     private fun setOnClickListeners() {
         resetButton.setOnClickListener {
-            resetStatus()
-        }
-        continueButton.setOnClickListener {
-            // go to the main screen, do not reset
-            resetStatus()
+            surveyViewModel.resetStatus()
         }
     }
     fun updateCounts() {
+
         // In the old version, this simply updated values that were live on the screen.
         // In the new version, this is probably best in the surveyResultsFragment.
 
-        yesTotalTextView.text = getString(R.string.yes_total, )
-        noTotalTextView.text = getString(R.string.no_total, noCount)
+        yesTotalTextView.text = getString(R.string.yes_total, surveyViewModel.yesCount)
+        noTotalTextView.text = getString(R.string.no_total, surveyViewModel.noCount)
     }
 
 
@@ -90,7 +85,6 @@ class SurveyResultsFragment : Fragment() {
         yesTotalTextView = view.findViewById(R.id.yes_total_results)
         noTotalTextView = view.findViewById(R.id.no_total_results)
         resetButton = view.findViewById(R.id.reset_button)
-        continueButton = view.findViewById(R.id.continue_button)
     }
 
 }

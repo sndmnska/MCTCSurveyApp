@@ -2,13 +2,13 @@ package com.example.mctcsurveyapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.fragment.app.Fragment
 
 // Keys to be able to save two variables in instance states.
-const val YES_COUNT_KEY = "yes-count-bundle-key"
-const val NO_COUNT_KEY = "no-count-bundle-key"
 
-const val EXTRA_YES_COUNT = "com.example.mctcsurveyapp.YES_COUNT"
-const val EXTRA_NO_COUNT = "com.example.mctcsurveyapp.NO_COUNT"
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,4 +19,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
+
 }
