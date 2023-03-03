@@ -1,19 +1,14 @@
 package com.example.mctcsurveyapp
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 
-
-const val EXTRA_YES_COUNT = "com.example.mctcsurveyapp.YES_COUNT"
-const val EXTRA_NO_COUNT = "com.example.mctcsurveyapp.NO_COUNT"
 
 
 class SurveyResultsFragment : Fragment() {
@@ -40,6 +35,14 @@ class SurveyResultsFragment : Fragment() {
     Either a ViewModel or the Activity itself should suffice well.
      */
 
+    /**What I have learned since office hours*
+    * Fragments initialize their widgets and listeners in onCreateView.  Keep an eye on those lifecycles!
+    * Fragments can have observers set up in them to look at a ViewModel or Activity to
+    *   act accordingly when data in either of those is changed.
+    * A given fragment is only responsible for retrieving and displaying data.
+    *   Calculations and data storage are the responsibility of the ViewModel, and
+    *   you can call up functions in the ViewModel to process data changes. */
+
     val surveyViewModel: SurveyViewModel by lazy {
         ViewModelProvider(requireActivity()).get(SurveyViewModel::class.java)
     }
@@ -47,7 +50,7 @@ class SurveyResultsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setOnClickListeners()
+
 
     }
 
@@ -56,13 +59,20 @@ class SurveyResultsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_survey_results, container, true)
+        val view =  inflater.inflate(R.layout.fragment_survey_results, container, false)
         initWidgets(view) // send view to be assigned to the findViewById
+        setOnClickListeners()
+        setObservers()
         return view
     }
 
-    companion object {
-        fun newInstance() = SurveyResultsFragment()
+    private fun setObservers() {
+        surveyViewModel.yesCount.observe(requireActivity()) {newYes ->
+            yesTotalTextView.text = getString(R.string.yes_total, surveyViewModel.yesCount.value)
+        }
+        surveyViewModel.noCount.observe(requireActivity()) {newNo ->
+            noTotalTextView.text = getString(R.string.no_total, surveyViewModel.noCount.value)
+        }
     }
 
 
@@ -71,15 +81,6 @@ class SurveyResultsFragment : Fragment() {
             surveyViewModel.resetStatus()
         }
     }
-    fun updateCounts() {
-
-        // In the old version, this simply updated values that were live on the screen.
-        // In the new version, this is probably best in the surveyResultsFragment.
-
-        yesTotalTextView.text = getString(R.string.yes_total, surveyViewModel.yesCount)
-        noTotalTextView.text = getString(R.string.no_total, surveyViewModel.noCount)
-    }
-
 
     private fun initWidgets(view: View) {
         yesTotalTextView = view.findViewById(R.id.yes_total_results)

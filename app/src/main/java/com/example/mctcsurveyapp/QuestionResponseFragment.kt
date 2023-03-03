@@ -1,16 +1,11 @@
 package com.example.mctcsurveyapp
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 
 /**
@@ -19,8 +14,7 @@ import androidx.lifecycle.ViewModelProvider
  * create an instance of this fragment.
  */
 
-const val YES_COUNT_KEY = "yes-count-bundle-key"
-const val NO_COUNT_KEY = "no-count-bundle-key"
+
 class QuestionResponseFragment : Fragment() {
     private lateinit var yesButton: Button
     private lateinit var noButton: Button
@@ -28,11 +22,8 @@ class QuestionResponseFragment : Fragment() {
 //    private lateinit var yesCountTextView: TextView
 //    private lateinit var noCountTextView: TextView
 //    private lateinit var resultButton: Button
-
+    //
 //    private val resultScreenLauncher =
-//        /* TODO: This might not mean much in this case.  This applies to Activities, in which we are attempting
-//            to put two fragments in to a single activity.
-//         */
 //        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 //            handleResetResult(result)
 //        }
@@ -57,7 +48,8 @@ class QuestionResponseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_question_response, container, true)
+        val view =  inflater.inflate(R.layout.fragment_question_response, container, false)
+        // note that widgets need to be initialized with regards to the  view within the fragment before setting the Listeners
         initializeWidgets(view)
         setListeners()
         return view
@@ -73,13 +65,13 @@ class QuestionResponseFragment : Fragment() {
 
 
     // save instance state for noCount and yesCount variables.
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(NO_COUNT_KEY, surveyViewModel.noCount)
-        outState.putInt(YES_COUNT_KEY, surveyViewModel.yesCount)
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putInt(NO_COUNT_KEY, surveyViewModel.noCount)
+//        outState.putInt(YES_COUNT_KEY, surveyViewModel.yesCount)
+//}
 
 
-    }
 
 
 
@@ -87,15 +79,11 @@ class QuestionResponseFragment : Fragment() {
         // Note that the TextView "surveyQuestion" is not a variable here,
         // because it is not interacted with in the program.
         yesButton.setOnClickListener {
-            surveyViewModel.yesCount += 1  // increments yesCount
-            TODO("Update Counts function")
-            updateCounts()
+            surveyViewModel.yesCountPlusOne()
         }
 
         noButton.setOnClickListener {
-            surveyViewModel.noCount += 1 // increments noCount
-            TODO("Update Counts function")
-            updateCounts()
+            surveyViewModel.noCountPlusOne()
         }
 
         /*  Unnecessary */
@@ -109,21 +97,9 @@ class QuestionResponseFragment : Fragment() {
 
 
     }
-    fun updateCounts() {
-        TODO("Connect TextViews with SurveyResultsFragment, somehow." +
-                "Either figure out a way to send the data over, such as via .putExtra()" +
-                "or get some other way to send the data to the Fragment.")
-        // In the old version, this simply updated values that were live on the screen.
-        // In the new version, this is probably best in the surveyResultsFragment.
-
-        val intent = Intent()
-        intent.putExtra(YES_COUNT_KEY, surveyViewModel.yesCount)
-        intent.putExtra(NO_COUNT_KEY,surveyViewModel.noCount)
 
 
-//        yesTotalTextView.text = getString(R.string.yes_total, surveyViewModel.yesCount)
-//        noTotalTextView.text = getString(R.string.no_total, surveyViewModel.noCount)
-    }
+
 
 
 //    private fun handleResetResult(result: ActivityResult) {
@@ -146,10 +122,6 @@ class QuestionResponseFragment : Fragment() {
 //            // changes such as a reset are intended.
 //        }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = QuestionResponseFragment()
-    }
 
     private fun initializeWidgets(view: View) {
         yesButton = view.findViewById(R.id.yesButton)
@@ -160,4 +132,12 @@ class QuestionResponseFragment : Fragment() {
 //        yesCountTextView = findViewById(R.id.yesTotal)
 //        noCountTextView = findViewById(R.id.noTotal)
     }
+    companion object {
+        // helper that belongs to fragment class
+        // might need to know things about the fragment before it is created.
+        // that's what this is for  - "static" things (Java)
+        @JvmStatic  // JavaVirtualMachineStatic
+        fun newInstance() = QuestionResponseFragment()
+    }
+
 }
